@@ -1,30 +1,45 @@
-### 백준 15686: 치킨 배달
+# 백준 15686: 치킨 배달
 
+import sys
 from itertools import combinations
 
-city_size, rest_store = map(int, input().split())
-city = [list(map(int, input().split())) for _ in range(city_size)]
+input = sys.stdin.readline
+
+def calc_chicken_dist(p1, p2):
+    return abs(p1[0]-p2[0]) + abs(p1[1]-p2[1])
+
+N, M = map(int, input().split())
+city = [list(map(int, input().split())) for _ in range(N)]
 
 houses = []
-store = []
+chicken_stores = []
 
-for i in range(city_size):
-    for j in range(city_size):
+for i in range(N):
+    for j in range(N):
         if city[i][j] == 1:
             houses.append((i, j))
         elif city[i][j] == 2:
-            store.append((i, j))
+            chicken_stores.append((i, j))
 
-result = 5000*13
+min_city_chicken_dist = float('inf')
 
-for com in combinations(store, rest_store):
-    min_city_dist = 0
+for combination in combinations(chicken_stores, M):
+    total_city_dist = 0
+
     for house in houses:
-        min_house_dist = 5000
-        for c in com: 
-            min_house_dist = min(min_house_dist, abs(house[0]-c[0])+abs(house[1]-c[1]))
-        min_city_dist += min_house_dist
-    result = min(result, min_city_dist)
+        min_chicken_dist = float('inf')
 
-print(result)
-            
+        for chicken_store in combination:
+            min_chicken_dist = min(
+                min_chicken_dist,
+                calc_chicken_dist(house, chicken_store)
+            )
+
+        total_city_dist += min_chicken_dist
+
+        if total_city_dist > min_city_chicken_dist:
+            break
+
+    min_city_chicken_dist = min(min_city_chicken_dist, total_city_dist)
+
+print(min_city_chicken_dist)
